@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -604,6 +605,20 @@ public class Algorithm {
 			}
 		}
 
+		
+		
+		
+		return img;
+	}
+	
+	
+	public BufferedImage getReconhecimentoDeImagens(BufferedImage img){
+		
+		getEscalaCinza(img);
+		
+		getDesfoque(img);
+		
+		getImagemBinaria(img);
 		
 		
 		
