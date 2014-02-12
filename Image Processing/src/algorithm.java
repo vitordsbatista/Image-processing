@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream.GetField;
@@ -11,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 
-public class Algorithm {
+public class algorithm {
 
 	static private int[][] arrayImage;
 
@@ -25,13 +26,17 @@ public class Algorithm {
 		return limiar;
 	}
 
-	public BufferedImage getEscalaCinza(BufferedImage im) {// Recebe uma
+	public BufferedImage getEscalaCinza(BufferedImage img) {// Recebe uma
 															// imagem e
 															// retorna a
 															// imagem
 															// binaria
+		
+		//Cria uma nova imagem para o processo com as mesmas dimensoes da imagem recebida
+		BufferedImage im = new BufferedImage(img.getHeight(), img.getWidth(), BufferedImage.TYPE_INT_ARGB);
+
+		
 		// Array com a largura e altura da imagem (Imagem binaria com media)
-		BufferedImage img = im;
 		arrayImage = null;
 		arrayImage = new int[img.getHeight()][img.getHeight()];
 		// Variaveis para o calcula da media
@@ -47,18 +52,16 @@ public class Algorithm {
 				cor = new Color(img.getRGB(i, j));
 				k = getLuminancia(cor.getRed(), cor.getGreen(), cor.getBlue());
 				l = (int) k;
-				img.setRGB(i, j, new Color(l, l, l).getRGB());
+				im.setRGB(i, j, new Color(l, l, l).getRGB());
 				arrayImage[i][j] = l;
 			}
 		}
 
-		return img;
+		return im;
 	}
 
 	public double getMedia(BufferedImage img) { // Media dos valores dos
 												// pixels
-		// Array com a largura e altura da imagem (Imagem binaria com media)
-
 		// valores usados no calculo
 		int l = 0, m = 0, n = 0;
 
@@ -98,45 +101,6 @@ public class Algorithm {
 		return img;
 	}
 	
-	
-	public BufferedImage getImagemBinariaAlgoritmo(BufferedImage img) {
-		// Array com a largura e altura da imagem (Imagem binaria com media)
-		//int[][] arrayImage = new int[img.getHeight()][img.getHeight()];
-		// Imagem em escala de cinza
-		//img = getEscalaCinza(img);
-		// cor
-		Color cor;
-		//double media = getMedia(img);
-		//System.out.println(media);
-		double media = 0;
-		int red;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				cor = new Color(img.getRGB(i, j));
-				//System.out.println(cor.getRed());
-				red = cor.getRed();
-				media += red; //Como o algoritmo ja coloca a escala de cinza, esse algoritmo pega somente a cor vermelha, ja que as outras cores são as mesmas por padrao
-				
-				
-			}
-		}
-		media /= img.getWidth()*img.getHeight();
-		cor = null;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				cor = new Color(img.getRGB(i, j));
-				if (cor.getRed() < media) {
-					img.setRGB(i, j, new Color(0, 0, 0).getRGB());
-				} else {
-					img.setRGB(i, j, new Color(255, 255, 255).getRGB());
-				}
-
-				// img.setRGB(i, j, new Color(255, 255, 255).getRGB());
-			}
-		}
-		//arrayImage = null;
-		return img;
-	}
 	
 	
 	
@@ -543,8 +507,48 @@ public class Algorithm {
 		return img;
 	}
 
+	public BufferedImage getBinarizaçaoUmaCor(BufferedImage img) {
+		//algoritmo utilizado como apoio para a Binarização por media, já que o outro algoritmo pega a media da imagem, esse pega a media da cor
+		// Array com a largura e altura da imagem (Imagem binaria com media)
+		//int[][] arrayImage = new int[img.getHeight()][img.getHeight()];
+		// Imagem em escala de cinza
+		//img = getEscalaCinza(img);
+		// cor
+		Color cor;
+		//double media = getMedia(img);
+		//System.out.println(media);
+		double media = 0;
+		int red;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				cor = new Color(img.getRGB(i, j));
+				//System.out.println(cor.getRed());
+				red = cor.getRed();
+				media += red; //Como o algoritmo ja coloca a escala de cinza, esse algoritmo pega somente a cor vermelha, ja que as outras cores são as mesmas por padrao
+				
+				
+			}
+		}
+		media /= img.getWidth()*img.getHeight();
+		cor = null;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				cor = new Color(img.getRGB(i, j));
+				if (cor.getRed() < media) {
+					img.setRGB(i, j, new Color(0, 0, 0).getRGB());
+				} else {
+					img.setRGB(i, j, new Color(255, 255, 255).getRGB());
+				}
+
+				// img.setRGB(i, j, new Color(255, 255, 255).getRGB());
+			}
+		}
+		//arrayImage = null;
+		return img;
+	}
 	
-	public BufferedImage getAlgoritmoTeste(BufferedImage img){
+	
+	public BufferedImage getBinarizaçaoPorMedia(BufferedImage img){
 		BufferedImage imgRed = new BufferedImage(img.getWidth(), img.getHeight(), 5);
 		BufferedImage imgGreen = new BufferedImage(img.getWidth(), img.getHeight(), 5);
 		BufferedImage imgBlue = new BufferedImage(img.getWidth(), img.getHeight(), 5);
@@ -566,9 +570,9 @@ public class Algorithm {
 		Color colorGreen;
 		Color colorBlue;
 		
-		getImagemBinariaAlgoritmo(imgRed);
-		getImagemBinariaAlgoritmo(imgGreen);
-		getImagemBinariaAlgoritmo(imgBlue);
+		getBinarizaçaoUmaCor(imgRed);
+		getBinarizaçaoUmaCor(imgGreen);
+		getBinarizaçaoUmaCor(imgBlue);
 		
 		for (int i = 0; i < img.getWidth(); i ++) {//Percorre a imagem
 			for (int j = 0; j < img.getHeight(); j ++) {
@@ -612,35 +616,13 @@ public class Algorithm {
 	}
 	
 	
-	public BufferedImage getReconhecimentoDeImagens(BufferedImage img){
-		
-		getEscalaCinza(img);
-		
-		getDesfoque(img);
-		
-		getImagemBinaria(img);
-		
-		
-		
-		return img;
-	}
-	
 	
 	public static void main(String[] args) throws IOException {
 		// Escala de cinza e imagem binaria
 		BufferedImage img = ImageIO.read(new File("images/lena.jpg"));
 		ImageIcon imageIcon;
-		Algorithm g = new Algorithm();
-		
-		
-		
-		
+		algorithm g = new algorithm();
 
-		/*imageIcon = new ImageIcon(img);
-
-		JOptionPane.showMessageDialog(null, new JLabel(null, imageIcon,
-				JLabel.LEFT));
-		*/
 		int[] v = new int[9+1];
 		v[1] = -1;
 		v[2] = -2;
@@ -655,12 +637,11 @@ public class Algorithm {
 		v[9] = 1;
 		int nor = 1;
 		//g.getEscalaCinza(img);
-		imageIcon = new ImageIcon(g.getAlgoritmoTeste(img));
+		imageIcon = new ImageIcon(g.getEscalaCinza(img));
 
 		JOptionPane.showMessageDialog(null, new JLabel(null, imageIcon,
 				JLabel.LEFT));
-		
-		
+
 		System.exit(0);
 	}
 
